@@ -1,47 +1,71 @@
-# Technical Debt Report Template
+# Technical Debt Record
 
-Use this template to capture a concrete area of technical debt and the expected remediation for a selected class or component.
+## Titel
 
-## Title
-A short, descriptive title for the debt.
+**Eine prägnante Bezeichnung der technischen Schuld.**
 
-## Target
-The class, module, or component affected by this debt.
+## Autor
 
-## Summary
-A concise summary of the technical debt and why it matters.
+Kürzel der Person(en), die die Schuld identifiziert oder dokumentiert hat
 
-## Debt Description
-A specific description of the debt:
-- what is wrong,
-- where it lives in the code,
-- why it is hard to work with or maintain.
+## Version
 
-## Evidence
-Concrete examples from the code, tests, or architecture that demonstrate the debt.
+Die Version des Projekts oder der Komponente, in der die Schuld existiert
 
-## Impact
-Why this debt matters:
-- developer productivity,
-- correctness,
-- testability,
-- performance,
-- future change cost.
+## Datum
 
-## Proposed Remediation
-The preferred way to reduce or remove the debt, scoped to the smallest useful change.
+Das Datum der Identifikation oder Dokumentation der Schuld im Format YYYY-MM-DD
 
-## Scope
-What the remediation includes and what it intentionally leaves out.
+## Status
 
-## Priority
-How urgent this debt is, based on risk and cost of delay.
+Der aktuelle Status der technischen Schuld (z.B. Identified, Analyzed, Approved, In Progress, Resolved, Closed, Rejected)
 
-## Estimate
-A rough size estimate for the work, if known.
+## Beziehungen
 
-## Tests / Validation
-Which tests should be added or preserved, and how the change will be validated.
+Verweise auf andere verwandte TDRs, um Zusammenhänge zu verdeutlichen
 
-## Notes
-Any additional context, constraints, or follow-up actions.
+## Zusammenfassung
+
+Eine kurze Übersicht über die technische Schuld und deren Bedeutung
+
+## Kontext
+
+Detaillierte Hintergrundinformationen, warum die Schuld entstanden ist (z.B. Zeitdruck, veraltete Technologien)
+
+## Auswirkungen
+
+### Technische Auswirkungen
+
+- Wie die Schuld die Systemleistung, Skalierbarkeit oder Wartbarkeit beeinflusst
+
+### Geschäftliche Auswirkungen
+
+- Die Auswirkungen auf Geschäftsprozesse, Kundenzufriedenheit oder Risikoebenen
+
+## Symptome
+
+Beobachtbare Anzeichen, die auf die Präsenz der technischen Schuld hinweisen (z.B. häufige Bugs, langsame Performance)
+
+## Schweregrad
+
+Die Kritikalität der Schuld (Critical, High, Medium, Low
+
+## Potenzielle Risiken
+
+- Mögliche negative Folgen, wenn die Schuld nicht behoben wird (z.B. Sicherheitslücken, erhöhte Kosten)
+
+## Vorgeschlagene Lösung
+
+Empfohlene Maßnahmen zur Behebung der technischen Schuld
+
+## Aufwand zur Behebung
+
+Geschätzter Aufwand in Zeit und Ressourcen, um die Schuld zu beheben
+
+## Abhängigkeiten
+
+Andere Aufgaben, Komponenten oder externe Faktoren, die die Behebung der Schuld beeinflussen
+
+## Zusätzliche Hinweise
+
+Weitere relevante Informationen oder Überlegungen zur Schuld.
