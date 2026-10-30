@@ -1,10 +1,10 @@
-# Testing Patterns Reference (CakePHP/Laravel)
+# PHP Testing Patterns (CakePHP/Laravel)
 
-Quick reference for common PHP testing patterns in CakePHP and Laravel. Both frameworks use PHPUnit; prefer their testing helpers for framework boundaries and ordinary PHPUnit assertions for application behavior.
+Quick reference for PHPUnit conventions and framework testing patterns in CakePHP and Laravel. Prefer framework helpers for framework boundaries and PHPUnit assertions for application behavior.
 
 ## Test Naming
 
-Name every test method `test<MethodUnderTest>_Given<Scenario>_<ExpectedResult>`. Name the production method, state the relevant precondition, and make the result observable and specific.
+Name every test method `test<MethodUnderTest>_<Scenario>_<ExpectedBehavior>`. Name the production method, state the relevant input or precondition, and make the result observable and specific.
 
 For example: `testPublish_GivenDraftArticle_SetsPublishedStatus`.
 
@@ -21,7 +21,7 @@ Use the smallest boundary that proves the behavior. For framework-level behavior
 
 ### Test a Controller Through the Application
 
-Use `IntegrationTestTrait` to send requests through the application and assert on the response. Fixtures provide a known database state; include only the data the test needs.
+Use `IntegrationTestTrait` to send HTTP requests through the application and `ConsoleIntegrationTestTrait` for console requests; assert on the response rather than instantiating controllers directly. Fixtures provide a known database state; include only the data the test needs.
 Assume the `app.Articles` fixture contains an article titled `Example article`.
 
 ```php
@@ -139,6 +139,12 @@ Laravel's `Mail::fake()`, `Queue::fake()`, `Event::fake()`, `Notification::fake(
 - Use fakes or stubs for slow, nondeterministic, or externally owned boundaries.
 - Mock interactions only when the interaction itself is the contract; otherwise assert on output or persisted state.
 - Assert meaningful outcomes: response status and payload, database state, or an externally visible effect.
+
+Use PHPUnit-native test doubles only; do not use Mockery or `ProphecyTrait`. Prefer stubs, and use mocks only to verify required interactions. Keep test-specific data and doubles next to the test; put reusable mocks in `tests/Mocks/`. Do not use callbacks in PHPUnit mocks.
+
+## Data Providers
+
+Declare data providers with `#[DataProvider('providerMethod')]`, not `@dataProvider`. Give each data set from the third onward a short description.
 
 ## Official References
 

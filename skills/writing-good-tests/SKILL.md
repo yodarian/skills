@@ -85,7 +85,6 @@ In production code, DRY (Don't Repeat Yourself) is usually right. In tests, **DA
 public function testCreate_GivenEmptyTitle_ThrowsInvalidArgumentException(): void
 {
     $this->expectException(InvalidArgumentException::class);
-    $this->expectExceptionMessage('Title is required');
 
     Task::create(title: '', assigneeId: 'user-1');
 }
@@ -128,27 +127,45 @@ Mock these:                    Don't mock these:
 
 **Use mocks only when:** the real implementation is too slow, non-deterministic, or has side effects you can't control (external APIs, email sending). Over-mocking creates tests that pass while production breaks.
 
+### Unit and Integration Tests
+
+#### Unit Tests
+
+Test the class under test in isolation, replacing every dependency with a PHPUnit stub or mock. Exercise private behavior through the public API; do not call private methods directly or use reflection or `invoke`. Trivial getters and setters with no logic do not need tests.
+
+#### Integration Tests
+
+Test interactions across components such as controllers, the database, routing, and serialization. Replace external APIs and services with stubs; never call them for real. Exercise controllers through real GET/POST requests rather than instantiating controllers directly. For CakePHP and Laravel patterns, see the testing reference.
 
 ### Use the Arrange-Act-Assert Pattern
 
 ```php
 public function testIsOverdue_GivenDeadlineHasPassed_ReturnsTrue(): void
 {
-    // Arrange: Set up the test scenario
+    // Arrange
     $task = Task::create(
         title: 'Test',
         deadline: new DateTimeImmutable('2025-01-01'),
     );
 
-    // Act: Perform the action being tested
+    // Act
     $isOverdue = $task->isOverdue(new DateTimeImmutable('2025-01-02'));
 
-    // Assert: Verify the outcome
+    // Assert
     self::assertTrue($isOverdue);
 }
 ```
 
+Keep the Arrange, Act, and Assert sections separate with blank lines.
+
+### Keep Tests Readable
+
+- Place test-class helper methods below the public test methods.
+- Keep tests and data providers flat; avoid loops and conditional control flow.
+
 ### One Assertion Per Concept
+
+Keep each test to one business context. If its name needs `And`, split it into separate tests.
 
 ```php
 // Good: Each test verifies one behavior
@@ -180,9 +197,25 @@ public function testIsValid_GivenEmptyValidAndOverlongTitles_ReturnsExpectedVali
 }
 ```
 
+### Prefer Exact Assertions
+
+Use `assertSame` for exact expected values rather than `assertEquals`, and use a specific assertion such as `assertGreaterThan` rather than a boolean expression like `assertTrue($value > 0)`. Hard-code expected results instead of repeating production logic:
+
+```php
+// Avoid deriving the expected value with the same logic as production.
+self::assertSame(5 * 10 + 3, $result);
+
+// State the independently known expected value.
+self::assertSame(53, $result);
+```
+
+For exception tests, set the expected exception and exercise the code without adding further assertions to that test.
+
 ### Name Tests with a Consistent Template
 
-Name every test method `test<MethodUnderTest>_Given<Scenario>_<ExpectedResult>`. The method-under-test segment names the production method; the `Given` segment states the scenario, and the final segment states the observable result. Make the expected result specific enough to distinguish the behavior being tested.
+Name every test method `test<MethodUnderTest>_<Scenario>_<ExpectedBehavior>`. The method-under-test segment names the production method, the scenario states the relevant input or precondition, and the final segment states the observable result. For example, use `testValidateInput_WithInvalidEmailAddress_ReturnsFalse`. Make the expected behavior specific enough to distinguish the behavior being tested.
+
+Name each test class with a `Test` suffix, such as `EmailValidatorTest`.
 
 ```php
 // Good: Names follow the template and read like a specification
@@ -247,6 +280,13 @@ public function testCompleteTask_GivenUnknownTask_HandlesErrors(): void
 | Skipping tests permanently | Dead code | Remove or fix it |
 | Overly broad assertions | Doesn't catch regressions | Be specific |
 
+### Keep Tests Deterministic
+
+- Use a controllable clock for time-dependent behavior; `sleep()` is not allowed. Set the test time deterministically and restore it in `tearDown()`.
+- Use fixed seeds instead of random values so test runs produce the same data.
+- Set known system time and configuration in `setUp()`, then restore the previous values in `tearDown()`.
+- Reset shared state between tests so results do not depend on execution order.
+
 ## Browser Testing with DevTools
 
 For anything that runs in a browser, unit tests alone aren't enough — you need runtime verification. Use Chrome DevTools MCP to give your agent eyes into the browser: DOM inspection, console logs, network requests, performance traces, and screenshots.
@@ -280,7 +320,7 @@ For detailed DevTools setup instructions and workflows, see `browser-testing-wit
 
 ## See Also
 
-For CakePHP and Laravel testing patterns illustrating these principles see `../../references/testing-patterns.md`.
+For PHPUnit conventions on test doubles and data providers, and CakePHP/Laravel testing patterns, see [`references/testing-patterns.md`](references/testing-patterns.md).
 
 ## Common Rationalizations
 
