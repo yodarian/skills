@@ -4,7 +4,36 @@ description: Create new tests or review existing tests for correctness, clarity,
 disable-model-invocation: true
 ---
 
+## Reviewing Existing Tests
 
+When asked to review a test, review the test and the production class it covers; do not treat the supplied test as the whole evidence base.
+
+1. Identify the class and behavior under test. Inspect the production class and the supplied test.
+2. Search for and inspect other tests covering the same class. When the supplied test is a unit test, look for a relevant integration test too; when it is an integration test, look for relevant unit tests of the class's isolated behavior.
+3. Assess coverage and quality against the guidance below. Treat another test layer as a coverage check, not a requirement by itself: report a gap only when meaningful behavior or a boundary is untested.
+4. Report only evidence-backed, actionable suggestions. Do not edit tests or production code during a review; wait for the user to select findings unless they explicitly request fixes in the same request.
+
+Prioritize findings by impact and regression risk: **HIGH** for missing coverage of important behavior or boundaries, **MEDIUM** for meaningful reliability or design issues such as a mock where a stub suffices, and **LOW** for naming or other clarity issues. Order findings HIGH, then MEDIUM, then LOW. Give each finding a sequential number and include its evidence and a suggested change. Do not report style preferences as defects.
+
+Use this format:
+
+```markdown
+## Test review: `path/to/Test.php`
+
+Scope checked: `path/to/Class.php`, `path/to/Test.php`, `path/to/RelatedTest.php` (unit/integration)
+
+### Findings
+
+1. **[HIGH] Missing coverage for invalid input** — `path/to/Test.php:42`
+   - Evidence: The class rejects empty input, but no inspected test exercises that behavior.
+   - Suggested change: Add a test asserting the documented result for empty input.
+
+2. **[MEDIUM] Mock used for a return-only dependency** — `path/to/Test.php:58`
+   - Evidence: The test configures a return value but does not verify an interaction.
+   - Suggested change: Replace the mock with a stub.
+```
+
+If there are no actionable findings, say so and identify the test files and class reviewed. If a complementary test layer does not exist, mention that in scope only when it leaves a meaningful behavior or boundary untested.
 
 ## The Test Pyramid
 
